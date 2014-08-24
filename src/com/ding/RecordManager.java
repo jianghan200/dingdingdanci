@@ -7,9 +7,8 @@ import java.util.LinkedList;
 import java.util.Random;
 import java.util.Vector;
 
-import org.hibernate.event.SaveOrUpdateEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.ding.filer.RecordFiler;
 import com.ding.filer.WordFiler;
@@ -19,7 +18,8 @@ import com.ding.util.Ebbinghaus;
 
 
 public class RecordManager {
-	private static final Logger log = LoggerFactory.getLogger(RecordManager.class);
+	
+	private static Log log = LogFactory.getLog(RecordManager.class);
 
 	//all words that have recited
 	private Vector<Record> reciteRecords = new Vector<Record>();
@@ -244,7 +244,7 @@ public class RecordManager {
 	}
 	
 	public void saveAllRecords() throws FileNotFoundException, IOException{
-		recordFiler.saveAllReciteRecords();
+		recordFiler.saveAllRecords(reciteRecords);
 	}
 	
 	public Word getRandomRecord() throws FileNotFoundException, IOException {

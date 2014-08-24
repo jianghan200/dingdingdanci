@@ -11,22 +11,27 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Vector;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.ding.Config;
 import com.ding.pojo.Record;
 import com.ding.pojo.Word;
 
-
+/**
+ * save all the record
+ * @author Han
+ *
+ */
 public class RecordFiler {
-	private static final Logger log = LoggerFactory.getLogger(RecordFiler.class);
+	
+	private static Log log = LogFactory.getLog(RecordFiler.class);
 	
 	private Vector<Record> reciteRecords = new Vector<Record>();
 	private String recordPath;
 
 	public static void main(String[] args) throws IOException{
-		RecordFiler wordRecordFileHandler = new RecordFiler(Config.recordDir +"day-1");
+		RecordFiler recordFiler = new RecordFiler(Config.recordDir +"day-1");
 		
 		WordFiler wordFiler = new WordFiler();
 //		wordFiler.loadWordBook(Config.wordBookPath);
@@ -41,12 +46,12 @@ public class RecordFiler {
 				temp.lastTime = System.currentTimeMillis();
 				temp.stage = 0;
 			
-			wordRecordFileHandler.reciteRecords.addElement(temp);
+			recordFiler.reciteRecords.addElement(temp);
 		}
 
 
 		log.debug(""+wordFiler.getAllWords().size());
-		wordRecordFileHandler.saveAllReciteRecords();
+		recordFiler.saveAllRecords(recordFiler.reciteRecords);
 	}
 	
 	public RecordFiler(String recordPath) throws IOException {
@@ -60,12 +65,12 @@ public class RecordFiler {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public void saveAllReciteRecords() throws FileNotFoundException, IOException {
+	public void saveAllRecords(Vector<Record> records) throws FileNotFoundException, IOException {
 		ObjectOutputStream outputStream = 
 			new ObjectOutputStream(
 					new FileOutputStream(recordPath));
 
-		for (Record r : reciteRecords) {
+		for (Record r : records) {
 			outputStream.writeUTF(r.word);
 			outputStream.writeLong(r.startTime);
 			outputStream.writeLong(r.lastTime);

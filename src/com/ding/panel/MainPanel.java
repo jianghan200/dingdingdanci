@@ -1,7 +1,6 @@
 package com.ding.panel;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.DisplayMode;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -29,8 +28,8 @@ import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import com.ding.Config;
 import com.ding.RecordManager;
@@ -40,7 +39,7 @@ import com.ding.util.ScreenManager;
 
 
 public class MainPanel extends JFrame implements KeyListener, ActionListener {
-	private static final Logger log = LoggerFactory.getLogger(MainPanel.class);
+	private static Log log = LogFactory.getLog(MainPanel.class);
 
 	private static final long serialVersionUID = -3794989334961977463L;
 	
@@ -254,16 +253,15 @@ public class MainPanel extends JFrame implements KeyListener, ActionListener {
 	
 	public void showNextWord(){
 		
-			Word nextWord = mainManager.getNextWord();
-			if (nextWord == null){
-				// 所有单词已经复习完o
-				JOptionPane.showMessageDialog(this, "已经没有需要复习的单词了~");
-			}else{
-				showWord(mainManager.getCurrentWord());
-			}
+		Word nextWord = mainManager.getNextWord();
+		if (nextWord == null){
+			// 所有单词已经复习完o
+			JOptionPane.showMessageDialog(this, "已经没有需要复习的单词了~");
+		}else{
+			showWord(mainManager.getCurrentWord());
+		}
 
 	}
-	
 	
 	public void showPreviousWord(){
 
@@ -382,8 +380,7 @@ public class MainPanel extends JFrame implements KeyListener, ActionListener {
 				
 			}
 			
-			
-			
+		
 			if (event.getKeyCode() == KeyEvent.VK_RIGHT) {
 				txtChinese.setFocusable(false);
 				showNextWord();
@@ -413,15 +410,10 @@ public class MainPanel extends JFrame implements KeyListener, ActionListener {
 //				showNextWord();
 			}
 			
-			
-
 			if (event.getKeyCode() == KeyEvent.VK_SPACE) {
 				txtChinese.setText(mainManager.getCurrentWord().getWordMean());		
 				txtChinese.setFocusable(true);
 			}
-			
-			
-			
 			 
 		}
 		
@@ -429,12 +421,9 @@ public class MainPanel extends JFrame implements KeyListener, ActionListener {
 			
 			log.debug("Save word!");
 			mainManager.saveCurrentWord(txtChinese.getText());
-//			lblEnglish.requestFocus();
 			txtChinese.setFocusable(false);
 			txtChinese.setFocusable(true);
 			
-//			txtChinese.
-//			isInEditMode = false;
 		 }
 		
 	}
@@ -448,10 +437,12 @@ public class MainPanel extends JFrame implements KeyListener, ActionListener {
 				mainManager.masterWord();
 				showNextWord();
 			}
+			if (event.getKeyCode() == KeyEvent.VK_9) {
+				log.debug("Word mastered");
+				mainManager.masterWord(9);
+				showNextWord();	
+			}
 		}
-		if (event.getKeyCode() == KeyEvent.VK_9) {
-			log.debug("Word mastered");
-			mainManager.masterWord(9);
-		}
+		
 	}
 }
