@@ -2,3 +2,4 @@
 /res/record
 example.log
 #忽略bin目录下所有文件
+res/record/day-1
