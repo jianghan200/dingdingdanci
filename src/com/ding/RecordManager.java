@@ -53,7 +53,7 @@ public class RecordManager {
 		log.debug(""+reciteRecords.size());
 		currentTime = System.currentTimeMillis()- 60*1000;
 		
-		WordFiler wordFiler = new WordFiler();
+		wordFiler = new WordFiler();
 //		wordFiler.loadWordBook(Config.wordBookPath);
 		allWords = wordFiler.loadJsonFile(Config.jsonDir+"day-1.json");
 //		wordBookName = wordFiler.getWordBookName();
