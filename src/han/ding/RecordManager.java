@@ -22,13 +22,13 @@ public class RecordManager {
 
 	private static Log log = LogFactory.getLog(RecordManager.class);
 
-	// all words that have recited
-	private Vector<Record> reciteRecords = new Vector<Record>();
 	public static final int MASTER_MINUS_ONE = 0;
 	public static final int MASTER_PLUS_ONE = 1;
 	public static final int MASTER_NINE = 2;
 	public static final int HARDSHIP_PLUS = 3;
 
+	// all words that have recited
+	private Vector<Record> reciteRecords = new Vector<Record>();
 	// words need to review by ebbinghaus
 	public Vector<Record> ebbinghausRecords = new Vector<Record>();
 
@@ -55,12 +55,12 @@ public class RecordManager {
 	public RecordManager(String wordBookFilePath) throws IOException {
 
 		this.wordBookFilePath = wordBookFilePath;
-		log.error(wordBookFilePath);
+		
 		PathUtil pathUtil = new PathUtil(wordBookFilePath);
 
-		String recordFilePath = pathUtil.getDir() + pathUtil.getPureFileName()
-				+ ".rec";
-		log.error(recordFilePath);
+		String recordFilePath = pathUtil.getDir() + pathUtil.getPureFileName() + ".rec";
+		
+		log.info(recordFilePath);
 
 		File dir = new File(recordFilePath);
 		if (!dir.exists()) {
@@ -70,14 +70,13 @@ public class RecordManager {
 
 		recordFiler = new RecordFiler(recordFilePath);
 		reciteRecords = recordFiler.getReciteRecords();
-
-		log.error("haha" + reciteRecords.size());
-		currentTime = System.currentTimeMillis() - 60 * 1000;
-
+		
 		wordFiler = new WordFiler();
 		allWords = wordFiler.loadJsonFile(wordBookFilePath);
 
+		log.error("Num of records: " + reciteRecords.size());
 		totalWordNum = allWords.size();
+		currentTime = System.currentTimeMillis() - 60 * 1000;
 
 	}
 
@@ -102,12 +101,16 @@ public class RecordManager {
 
 				switch (stage) {
 				case MASTER_MINUS_ONE:
-					log.info("减一" + r.stage + "\t" + r.word);
-					r.stage--;
+					log.info("减  " + r.stage + "\t" + r.word);
+					if(r.stage>0){
+						r.stage--;
+					}
 					break;
 				case MASTER_PLUS_ONE:
-					log.info("加一" + r.stage + "\t" + r.word);
-					r.stage++;
+					log.info("加  " + r.stage + "\t" + r.word);
+					if(r.stage<9){
+						r.stage++;
+					}
 					r.hardship--;
 					break;
 				case MASTER_NINE:
@@ -115,124 +118,69 @@ public class RecordManager {
 					r.stage = 9;
 					break;
 				case HARDSHIP_PLUS:
-					log.info("难度" + r.stage + "\t" + r.word);
+					log.info("难  " + r.stage + "\t" + r.word);
 					r.hardship++;
 					break;
 				default:
 					break;
 				}
-
+				// update access time
 				r.lastTime = System.currentTimeMillis();
-
-				// Record record = new Record(
-				// r.word,
-				// r.startTime,
-				// System.currentTimeMillis(),
-				// stage
-				// );
-				//
-				// updateSingleReciteRecord(record);
-				// log.debug(record.toString());
-
-				// Record record = reciteRecords.get(currentWordIndex);
-				// reciteRecords.
-				// log.debug(record.toString());
-				// record.stage ++;
-				// record.lastTime =System.currentTimeMillis();
-				// updateSingleReciteRecord(record);
+				// ignore remaining loop
 				break;
 			}
 		}
 
 	}
 
-	// public void unMasterWord(int stage) {
-	//
-	// for (Record r : reciteRecords) {
-	// if (currentWord.getWord().equals(r.word)) {
-	// log.debug(r.toString());
-	//
-	// r.stage--;
-	// r.lastTime = System.currentTimeMillis();
-	//
-	// // Record record = new Record(
-	// // r.word,
-	// // r.startTime,
-	// // System.currentTimeMillis(),
-	// // r.stage - 1
-	// // );
-	// //
-	// // updateSingleReciteRecord(record);
-	// // log.debug(record.toString());
-	//
-	// break;
-	// }
-	// }
-	// }
-
-	// public void saveReciteRecord() {
-	//
-	// for (Record r : recordFiler.getReciteRecords()) {
-	// if (currentWord.getWord().equals(r.word)) {
-	// Record reciteRecord = new Record(
-	// r.word,
-	// r.startTime,
-	// System.currentTimeMillis(),
-	// r.stage
-	// );
-	// updateSingleReciteRecord(reciteRecord);
-	// break;
-	// }
-	// }
-	// }
-
 	public Word getNextWord() {
 
 		refreshRecord();
-		log.debug("currentWordIndex is " + currentWordIndex);
-		log.debug("ebbinghausRecords.size is " + ebbinghausRecords.size());
-
+		
+		//ensure the index is in range
 		if (currentWordIndex < ebbinghausRecords.size() - 1) {
 			currentWordIndex++;
 		}
 
-		if (currentWordIndex == ebbinghausRecords.size() - 1) {
-			return null;
-		}
-
 		Record record = ebbinghausRecords.get(currentWordIndex);
-
-		log.debug("record.word is " + record.word);
 		currentWord = getWordByName(record.word);
-		if (currentWord == null) {
-			log.error("currentWord is null ");
-		}
-		log.debug("Next word: " + currentWord.getWord());
+				
 		return currentWord;
 	}
 
 	public Word getPreviousWord() {
 		refreshRecord();
 
+		//ensure the index is in range
 		if (currentWordIndex > 0) {
 			currentWordIndex--;
 		}
 
 		Record record = ebbinghausRecords.get(currentWordIndex);
-
 		currentWord = getWordByName(record.word);
-		log.debug("Previous word: " + currentWord.getWord());
+		
 		return currentWord;
 	}
 
 	public void refreshRecord() {
 
+		log.debug("currentWordIndex is " + currentWordIndex);
+		log.debug("ebbinghausRecords.size is " + ebbinghausRecords.size());
+		
 		if ((System.currentTimeMillis() - currentTime) > (1000 * 60)) {// minutes
+			
 
 			currentTime = System.currentTimeMillis();
 			resetEbbinghaus();
 
 		}
+		
+		//auto save every 3 mins
+		if ((System.currentTimeMillis() - currentTime) > (3000 * 60)){
+			saveAllRecords();
+			saveAllWords();
+		}
+			
 
 	}
 
@@ -251,29 +199,6 @@ public class RecordManager {
 		currentWordIndex = 0;
 	}
 
-	// 保存单条记录
-	public boolean updateSingleReciteRecord(Record record) {
-		// 如果单词已存在于背诵记录中，则更新
-		int index = -1;
-		for (Record r : reciteRecords) {
-			if (record.word.equals(r.word)) {
-				index = reciteRecords.indexOf(r);
-				break;
-			}
-		}
-		if (index != -1) {
-			reciteRecords.remove(index);
-			reciteRecords.add(record);
-		} else {
-			reciteRecords.add(record);
-		}
-
-		return true;
-	}
-
-	public void saveAllRecords() throws FileNotFoundException, IOException {
-		recordFiler.saveAllRecords(reciteRecords);
-	}
 
 	public Word getRandomRecord() throws FileNotFoundException, IOException {
 
@@ -319,6 +244,10 @@ public class RecordManager {
 				break;
 			}
 		}
+	}
+
+	public void saveAllRecords() {
+		recordFiler.saveAllRecords(reciteRecords);
 	}
 
 	public void saveAllWords() {
