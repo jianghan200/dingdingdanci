@@ -6,20 +6,13 @@ public class Record {
 	public long startTime;
 	public long lastTime;
 	public int stage;
+	public int hardship;//陌生度
 	
 	public Record() {
 		
 	}
 	
-	public Record(
-			String word, 
-			long startTime, long lastTime, 
-			int stage) {
-		this.word = word;
-		this.startTime = startTime;
-		this.lastTime = lastTime;
-		this.stage = stage;
-	}
+
 
 	@Override
 	public String toString() {

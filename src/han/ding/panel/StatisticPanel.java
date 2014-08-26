@@ -38,6 +38,7 @@ public class StatisticPanel extends JFrame {
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BorderLayout());
 		this.recordsVector = recordsVector;
+		
 //		try {
 //			recordsVector = (new RecordFiler(recordPath)).getReciteRecords();
 //		} catch (IOException e) {
@@ -46,7 +47,7 @@ public class StatisticPanel extends JFrame {
 //		}
 
 		Object[][] rowData = loadReciteRecords();
-		String[] names = {"单词", "首次记忆时间", "上次记忆时间", "记忆阶段"}; 
+		String[] names = {"单词", "首次记忆时间", "上次记忆时间", "记忆阶段","单词难度"}; 
 		
 		table = new JTable(rowData, names) {
 			// 将词汇统计表格控件设为只读
@@ -79,7 +80,7 @@ public class StatisticPanel extends JFrame {
 	
 	private Object[][] loadReciteRecords() {
 		log.info("Table show "+ recordsVector.size()+" records");
-		Object[][] obj = new Object[recordsVector.size()][4];
+		Object[][] obj = new Object[recordsVector.size()][5];
 		int j = 0;
 		String str;
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
@@ -91,6 +92,7 @@ public class StatisticPanel extends JFrame {
 			str = format.format(new Date(i.lastTime));
 			obj[j][2] = str;
 			obj[j][3] = i.stage;
+			obj[j][4] = i.hardship;
 			++j;
 		}
 		return obj;

@@ -19,15 +19,17 @@ import org.apache.commons.logging.LogFactory;
  * @author Han
  * 
  */
-public class texter2 {
+public class Texter2 {
 
-	private static Log log = LogFactory.getLog(texter2.class);
-
-	public ArrayList<Word> allWords = new ArrayList<Word>();
+	private static Log log = LogFactory.getLog(Texter2.class);
+	
+	private String wordBookName;
+	private String wordBookFilePath;
+	private ArrayList<Word> allWords = new ArrayList<Word>();
 
 	public static void main(String[] args) throws IOException {
 
-		texter2 tr = new texter2();
+		Texter2 tr = new Texter2();
 		tr.loadWordBook(Config.RESOURCE_PATH+"word_book_raw_2/再要你命3000.txt");
 		log.info("All worrs: "+tr.getAllWords().size());
 		
@@ -36,7 +38,7 @@ public class texter2 {
 
 	}
 
-	public texter2() {
+	public Texter2() {
 
 	}
 
@@ -56,19 +58,16 @@ public class texter2 {
 		FileReader fr = new FileReader(wordBookPath);
 		BufferedReader br = new BufferedReader(fr);
 
-		ArrayList<Word> wordBook = new ArrayList<Word>();
-
 		Word word = null;
 		String line;
 
-		// The first line is the name of the word book
 
 		do {
 			line = br.readLine();
 			
 			if (line != null && !line.equals("")) {			
 					word = wordItem2Word(line);
-					wordBook.add(word);
+					allWords.add(word);
 			}
 
 		} while (line != null);
@@ -76,8 +75,8 @@ public class texter2 {
 		br.close();
 		fr.close();
 
-		allWords = wordBook;
-		return wordBook;
+
+		return allWords;
 	}
 
 	public Word wordItem2Word(String wordItem) {
@@ -94,24 +93,5 @@ public class texter2 {
 		return word;
 	}
 
-	/**
-	 * 将原声的单词本文件转为格式化好的单词本
-	 * 
-	 * @throws IOException
-	 */
-	public static void convertAllWordBook() throws IOException {
-
-		texter2 wordFiler = new texter2();
-
-		String[] thesList = { "CET4", "CET6", "GRE", "TOFEL", "研究生入学考试词汇" };
-
-		for (int i = 0; i < thesList.length; i++) {
-
-			wordFiler.loadWordBook(Config.DIR_WORD_BOOK_RAW + thesList[i] + ".txt");
-			ArrayList<Word> allWords = wordFiler.getAllWords();
-			// wordFiler.saveToJsonFile(allWords,Config.jsonDir+thesList[i]+".json");
-		}
-
-	}
 
 }

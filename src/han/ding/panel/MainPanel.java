@@ -44,6 +44,8 @@ public class MainPanel extends JFrame implements KeyListener, ActionListener {
 
 	private static final long serialVersionUID = -3794989334961977463L;
 	
+
+	
 	private boolean isInEditMode = false;
 	private boolean isChineseShowed = false;
 	/* 各种控件 */
@@ -263,7 +265,7 @@ public class MainPanel extends JFrame implements KeyListener, ActionListener {
 		if (nextWord == null){
 			// 所有单词已经复习完o
 			
-			mainManager.resetEbbinghaus();
+//			mainManager.resetEbbinghaus();
 			if(mainManager.ebbinghausRecords.size()>0){
 				showNextWord();
 			}
@@ -447,6 +449,7 @@ public class MainPanel extends JFrame implements KeyListener, ActionListener {
 					showNextWord();
 					
 				}else{
+					mainManager.masterWord(RecordManager.HARDSHIP_PLUS);
 					txtChinese.setText(mainManager.getCurrentWord().getWordMean());		
 					txtChinese.setFocusable(true);
 					isChineseShowed = true;
@@ -505,15 +508,23 @@ public class MainPanel extends JFrame implements KeyListener, ActionListener {
 		if(!isInEditMode){
 			if (event.getKeyCode() == KeyEvent.VK_M) {
 				log.debug("Word mastered +1");
-				mainManager.masterWord(0);
+				mainManager.masterWord(RecordManager.MASTER_PLUS_ONE);
 				showNextWord();
 			}
 			if (event.getKeyCode() == KeyEvent.VK_9) {
 				log.debug("Word mastered 9");
-				mainManager.masterWord(9);
+				mainManager.masterWord(RecordManager.MASTER_NINE);
 				showNextWord();	
 			}
-		}
-		
+			//熟悉度减一
+			if (event.getKeyCode() == KeyEvent.VK_MINUS||event.getKeyCode() == KeyEvent.VK_N) {
+				log.debug("Word mastered -1");
+				mainManager.masterWord(RecordManager.MASTER_MINUS_ONE);
+				showNextWord();	
+			}
+			
+			
+		}		
 	}
+	
 }

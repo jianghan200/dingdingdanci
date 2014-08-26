@@ -30,15 +30,20 @@ public class RecordFiler {
 	
 	private Vector<Record> reciteRecords = new Vector<Record>();
 	private String recordPath;
-
-	public static void main(String[] args) throws IOException{
-		
+	
+	public static void main(String[] args) throws IOException {
+		RecordFiler recordFiler = new RecordFiler(Config.DIR_WORD_BOOK_JSON+"GRE/day-1.rec");
+		recordFiler.addHardship();
+		recordFiler.saveAllRecords(recordFiler.getReciteRecords());
+	
 	}
+
 	
 	public RecordFiler(String recordPath) throws IOException {
 		
 		this.recordPath = recordPath;
 		loadReciteRecords();
+		
 	}
 	
 	/**
@@ -55,7 +60,8 @@ public class RecordFiler {
 			outputStream.writeUTF(r.word);
 			outputStream.writeLong(r.startTime);
 			outputStream.writeLong(r.lastTime);
-			outputStream.writeInt(r.stage);	
+			outputStream.writeInt(r.stage);
+			outputStream.writeInt(r.hardship);
 		}
 		outputStream.close();
 	}
@@ -76,6 +82,7 @@ public class RecordFiler {
 					temp.startTime = inputStream.readLong();
 					temp.lastTime = inputStream.readLong();
 					temp.stage = inputStream.readInt();
+					temp.hardship= inputStream.readInt();
 				}
 				catch (EOFException e) {
 					break;
@@ -95,6 +102,10 @@ public class RecordFiler {
 	}
 	
 	
+	public void addHardship(){
+		for (Record record : reciteRecords) {
+			record.hardship = 0;
+		}
+	}
 	
-
 }

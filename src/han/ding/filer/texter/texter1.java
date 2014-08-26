@@ -18,25 +18,31 @@ import org.apache.commons.logging.LogFactory;
  * @author Han
  * 
  */
-public class texter1 {
+public class Texter1 {
 
-	private static Log log = LogFactory.getLog(texter1.class);
+	private static Log log = LogFactory.getLog(Texter1.class);
 	
 	
 	private String wordBookName;
-	public ArrayList<Word> allWords = new ArrayList<Word>();
+	private String wordBookFilePath;
+	private ArrayList<Word> allWords = new ArrayList<Word>();
 
 
 	public static void main(String[] args) throws IOException {
 
-		texter1 tr = new texter1();
-		tr.loadWordBook(Config.RESOURCE_PATH+"word_book_raw/GRE.txt");
+		Texter1 tr = new Texter1(Config.RESOURCE_PATH+"word_book_raw/GRE.txt");
+		
 		log.info("All worrs: "+tr.getAllWords().size());
 
 	}
 
-	public texter1() {
-
+	public Texter1(String wordBookFilePath) {
+		try {
+			loadWordBook(wordBookFilePath);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public ArrayList<Word> getAllWords() {
@@ -55,7 +61,6 @@ public class texter1 {
 		FileReader fr = new FileReader(wordBookPath);
 		BufferedReader br = new BufferedReader(fr);
 		
-		ArrayList<Word> wordBook = new ArrayList<Word>();
 		ArrayList<String> wordItem = new ArrayList<String>();
 		
 		Word word = null;
@@ -63,7 +68,6 @@ public class texter1 {
 
 		//The first line is the name of the word book
 		wordBookName = br.readLine(); 
-		System.out.println(wordBookName);
 		
 		do {
 			line = br.readLine();
@@ -74,7 +78,7 @@ public class texter1 {
 				// when there is word in wordItem
 				if(word!=null){
 					word = wordItem2Word(wordItem);
-					wordBook.add(word);
+					allWords.add(word);
 				}
 				word = new Word();
 				wordItem = new ArrayList<String>();
@@ -90,8 +94,7 @@ public class texter1 {
 		br.close();
 		fr.close();
 		
-		allWords = wordBook;
-		return wordBook;
+		return allWords;
 	}
 	
 	public Word wordItem2Word(ArrayList<String> wordItem) {
@@ -121,24 +124,6 @@ public class texter1 {
 		 return word;
 	 }
 
-	/**
-	 * 将原声的单词本文件转为格式化好的单词本
-	 * 
-	 * @throws IOException
-	 */
-	public static void convertAllWordBook() throws IOException {
 
-		texter1 wordFiler = new texter1();
-
-		String[] thesList = { "CET4", "CET6", "GRE", "TOFEL", "研究生入学考试词汇" };
-
-		for (int i = 0; i < thesList.length; i++) {
-
-			wordFiler.loadWordBook(Config.DIR_WORD_BOOK_RAW+ thesList[i] + ".txt");
-			ArrayList<Word> allWords = wordFiler.getAllWords();
-			// wordFiler.saveToJsonFile(allWords,Config.jsonDir+thesList[i]+".json");
-		}
-
-	}
 
 }
