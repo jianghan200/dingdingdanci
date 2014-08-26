@@ -1,4 +1,7 @@
-package com.ding.filer;
+package han.ding.filer;
+
+import han.ding.Config;
+import han.ding.pojo.Word;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -13,8 +16,6 @@ import java.util.Random;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.ding.Config;
-import com.ding.pojo.Word;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
@@ -35,13 +36,26 @@ public class WordFiler {
 	
 	public static void main(String[] args) throws IOException{
 		
-		convertAllWordBook();
+		/**
+		//批量处理单词释义
+		WordFiler wordFiler = new WordFiler();
+		wordFiler.loadJsonFile(Config.DIR_WORD_BOOK_JSON+"再要你命3000.json");
+		log.debug("All words: "+wordFiler.allWords.size());
+		
+		for (Word word : wordFiler.getAllWords()) {
+			word.setWordMean(word.getWordMean().replace("\t", ""));
+		}
+		wordFiler.saveToJsonFile( wordFiler.getAllWords(), Config.DIR_WORD_BOOK_JSON+"再要你命3000.json");
+		 */
+		
+//		convertAllWordBook();
+		
 		
 		//split 
-//		WordFiler wordFiler = new WordFiler();
-//		wordFiler.loadWordBook(Config.wordBookPath);
-//		wordFiler.splitIntoDaysWord(200);
-//		log.debug("All words: "+wordFiler.allWords.size());
+		WordFiler wordFiler = new WordFiler();
+		wordFiler.loadJsonFile(Config.DIR_WORD_BOOK_JSON+"再要你命3000.json");
+		wordFiler.splitIntoDaysWord(300);
+		log.debug("All words: "+wordFiler.allWords.size());
 		
 		/*
 			//Save all the words into database
@@ -75,9 +89,8 @@ public class WordFiler {
 	//		wordDAO.saveAllWordIntoDb(allWordsSet);
 		}
 
-	public WordFiler() throws IOException {
-			
-//		allWords = loadWordBook(wordBookPath);
+	public WordFiler(){
+
 	}
 
 	public ArrayList<Word> getAllWords() {
@@ -186,6 +199,11 @@ public class WordFiler {
 		return allWords;
 	}
 
+	/**
+	 * 将ArrayList中的单词存为
+	 * @param allWords
+	 * @param jsonFilePath
+	 */
 	public void saveToJsonFile(ArrayList<Word> allWords,String jsonFilePath){
 		try {   
 			  Gson mGson = new Gson();
@@ -224,13 +242,17 @@ public class WordFiler {
 					allWords.remove(index);
 				}	
 			}
-			saveToJsonFile(daysWords,Config.jsonDir+"day-"+day+".json");
+			saveToJsonFile(daysWords,Config.DIR_WORD_BOOK_JSON +"再要你命3000/day-"+day+".json");
 			day++;
 		}
 		
 	}
 	
 	
+	/**
+	 * 将原声的单词本文件转为格式化好的单词本
+	 * @throws IOException
+	 */
 	public static void convertAllWordBook() throws IOException{
 		
 		WordFiler wordFiler = new WordFiler();
@@ -239,7 +261,7 @@ public class WordFiler {
 		
 		for (int i = 0; i < thesList.length; i++) {
 			
-			wordFiler.loadWordBook(Config.wordBookDir + thesList[i]+".txt");
+			wordFiler.loadWordBook(Config.DIR_WORD_BOOK_RAW + thesList[i]+".txt");
 			ArrayList<Word> allWords = wordFiler.getAllWords();
 			wordFiler.saveToJsonFile(allWords,Config.jsonDir+thesList[i]+".json");
 		}

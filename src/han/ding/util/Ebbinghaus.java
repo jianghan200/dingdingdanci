@@ -1,6 +1,6 @@
-package com.ding.util;
+package han.ding.util;
 
-import com.ding.pojo.Record;
+import han.ding.pojo.Record;
 
 public class Ebbinghaus {
 	

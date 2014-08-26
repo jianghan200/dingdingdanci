@@ -1,5 +1,8 @@
 // ReciteStat.java
-package com.ding.panel;
+package han.ding.panel;
+
+import han.ding.filer.RecordFiler;
+import han.ding.pojo.Record;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -16,11 +19,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import com.ding.filer.RecordFiler;
-import com.ding.pojo.Record;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 
 
 public class StatisticPanel extends JFrame {
+	
+	private static Log log = LogFactory.getLog(StatisticPanel.class);
 
 	private static final long serialVersionUID = 7247900451593318205L;
 	
@@ -72,6 +78,7 @@ public class StatisticPanel extends JFrame {
 	}
 	
 	private Object[][] loadReciteRecords() {
+		log.info("Table show "+ recordsVector.size()+" records");
 		Object[][] obj = new Object[recordsVector.size()][4];
 		int j = 0;
 		String str;

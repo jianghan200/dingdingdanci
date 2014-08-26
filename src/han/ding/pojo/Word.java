@@ -1,4 +1,4 @@
-package com.ding.pojo;
+package han.ding.pojo;
 
 
 /**

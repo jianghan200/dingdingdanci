@@ -1,6 +1,10 @@
 // ReviewManager.java
 
-package com.ding.filer;
+package han.ding.filer;
+
+import han.ding.Config;
+import han.ding.pojo.Record;
+import han.ding.pojo.Word;
 
 import java.io.EOFException;
 import java.io.FileInputStream;
@@ -14,9 +18,6 @@ import java.util.Vector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.ding.Config;
-import com.ding.pojo.Record;
-import com.ding.pojo.Word;
 
 /**
  * save all the record
@@ -31,27 +32,7 @@ public class RecordFiler {
 	private String recordPath;
 
 	public static void main(String[] args) throws IOException{
-		RecordFiler recordFiler = new RecordFiler(Config.recordDir +"day-1");
 		
-		WordFiler wordFiler = new WordFiler();
-//		wordFiler.loadWordBook(Config.wordBookPath);
-		wordFiler.loadJsonFile(Config.jsonDir+"day-1.json");
-		
-		log.debug(""+wordFiler.getAllWords().size());
-		for (Word word : wordFiler.getAllWords()) {
-			Record temp = new Record();
-		
-				temp.word = word.getWord();
-				temp.startTime = System.currentTimeMillis();
-				temp.lastTime = System.currentTimeMillis();
-				temp.stage = 0;
-			
-			recordFiler.reciteRecords.addElement(temp);
-		}
-
-
-		log.debug(""+wordFiler.getAllWords().size());
-		recordFiler.saveAllRecords(recordFiler.reciteRecords);
 	}
 	
 	public RecordFiler(String recordPath) throws IOException {
@@ -112,5 +93,8 @@ public class RecordFiler {
 	public Vector<Record> getReciteRecords() {
 		return reciteRecords;
 	}
+	
+	
+	
 
 }

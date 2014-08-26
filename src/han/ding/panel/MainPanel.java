@@ -1,4 +1,10 @@
-package com.ding.panel;
+package han.ding.panel;
+
+import han.ding.Config;
+import han.ding.RecordManager;
+import han.ding.pojo.Word;
+import han.ding.util.MyFont;
+import han.ding.util.ScreenManager;
 
 import java.awt.Color;
 import java.awt.DisplayMode;
@@ -31,11 +37,6 @@ import javax.swing.UnsupportedLookAndFeelException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.ding.Config;
-import com.ding.RecordManager;
-import com.ding.pojo.Word;
-import com.ding.util.MyFont;
-import com.ding.util.ScreenManager;
 
 
 public class MainPanel extends JFrame implements KeyListener, ActionListener {
@@ -44,6 +45,7 @@ public class MainPanel extends JFrame implements KeyListener, ActionListener {
 	private static final long serialVersionUID = -3794989334961977463L;
 	
 	private boolean isInEditMode = false;
+	private boolean isChineseShowed = false;
 	/* 各种控件 */
 	private JPanel mainPanel;
 	// word 
@@ -94,9 +96,9 @@ public class MainPanel extends JFrame implements KeyListener, ActionListener {
 	
 	public MainPanel(){
 		
-		if(!Config.DEBUGMODE){
-			System.out.close();
-		}
+//		if(!Config.DEBUGMODE){
+//			System.out.close();
+//		}
 		
 		// Initialize frame
 		if(Config.IS_FULL_SCREEN){
@@ -108,7 +110,7 @@ public class MainPanel extends JFrame implements KeyListener, ActionListener {
 
 		}else{
 			
-			this.setSize(1024, 700);// set the size
+			this.setSize(1024, 600);// set the size
 			this.setFocusable(true);
 			this.setResizable(true);// forbid resize
 			this.setLocationRelativeTo(null);// center
@@ -116,10 +118,20 @@ public class MainPanel extends JFrame implements KeyListener, ActionListener {
 			this.setUndecorated(false);
 		}
 		
+		/* 初始化单词管理器 */
+		try {
+			mainManager = new RecordManager(Config.DIR_WORD_BOOK_JSON+"GRE/day-1.json");
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage());
+			System.exit(-1);
+		}
 		
-		initialContent();
+		
 		// 初始化菜单栏
 		initialMenubar();
+		
+		// 初始化主界面
+		initialContent();
 		
 		this.setBackground(Color.white);
 		this.setForeground(Color.white);
@@ -129,13 +141,6 @@ public class MainPanel extends JFrame implements KeyListener, ActionListener {
 		((JComponent) this.getContentPane()).setOpaque(false);
 		this.setVisible(true);
 				
-		try {
-			mainManager = new RecordManager(Config.recordDir +"day-1",Config.jsonDir +"day-1.json");
-		
-		} catch (IOException e) {
-			JOptionPane.showMessageDialog(this, e.getMessage());
-			System.exit(-1);
-		}
 		lblWordBook.setText(mainManager.getWordBookName());
 		showNextWord();
 		
@@ -252,27 +257,41 @@ public class MainPanel extends JFrame implements KeyListener, ActionListener {
 
 	
 	public void showNextWord(){
+		txtChinese.setFocusable(false);
 		
 		Word nextWord = mainManager.getNextWord();
 		if (nextWord == null){
 			// 所有单词已经复习完o
+			
+			mainManager.resetEbbinghaus();
+			if(mainManager.ebbinghausRecords.size()>0){
+				showNextWord();
+			}
+			
 			JOptionPane.showMessageDialog(this, "已经没有需要复习的单词了~");
+			
 		}else{
 			showWord(mainManager.getCurrentWord());
 		}
-
+		isChineseShowed = false;
 	}
 	
 	public void showPreviousWord(){
-
+		txtChinese.setFocusable(false);
+		
 		mainManager.getPreviousWord();
 		showWord(mainManager.getCurrentWord());
+		
+		isChineseShowed = false;
 	}
 	
 	public void showRandomWord() {
-
+		txtChinese.setFocusable(false);
+		
 		mainManager.getNextRandomWord();
 		showWord(mainManager.getCurrentWord());
+		
+		isChineseShowed = false;
 	}
 	// 将单词显示在界面上
 	public void showWord(Word word) {
@@ -287,13 +306,24 @@ public class MainPanel extends JFrame implements KeyListener, ActionListener {
 
 	public void chooseThesaurus() {
 		JFileChooser chooser = new JFileChooser();
-		chooser.setCurrentDirectory(new java.io.File(Config.wordBookPath));
+		chooser.setCurrentDirectory(new java.io.File(Config.PATH_WORD_BOOK ));
+		
 		chooser.setDialogTitle("选择词库");
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		chooser.setAcceptAllFileFilterUsed(false);
+		
 		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-			Config.wordBookPath = chooser.getSelectedFile().getPath();
-			// thesName = chooser.getSelectedFile().getName();
+//			Config.PATH_WORD_BOOK  = chooser.getSelectedFile().getPath();
+			log.info("Path is : "+chooser.getSelectedFile().getPath());
+//			log.info(chooser.getSelectedFile().getName());
+
+			/* 初始化单词管理器 */
+			try {
+				mainManager = new RecordManager(chooser.getSelectedFile().getPath());
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(this, e.getMessage());
+				System.exit(-1);
+			}
 //			try {
 //				mainManager.setThesaurus(Config.wordBookPath);
 //			} catch (IOException e) {
@@ -381,11 +411,11 @@ public class MainPanel extends JFrame implements KeyListener, ActionListener {
 			}
 			
 		
-			if (event.getKeyCode() == KeyEvent.VK_RIGHT) {
+			if (event.getKeyCode() == KeyEvent.VK_RIGHT||event.getKeyCode() == KeyEvent.VK_CLOSE_BRACKET) {
 				txtChinese.setFocusable(false);
 				showNextWord();
 			}
-			if (event.getKeyCode() == KeyEvent.VK_LEFT) {
+			if (event.getKeyCode() == KeyEvent.VK_LEFT||event.getKeyCode() == KeyEvent.VK_OPEN_BRACKET) {
 				txtChinese.setFocusable(false);
 				showPreviousWord();
 			}
@@ -411,12 +441,30 @@ public class MainPanel extends JFrame implements KeyListener, ActionListener {
 			}
 			
 			if (event.getKeyCode() == KeyEvent.VK_SPACE) {
-				txtChinese.setText(mainManager.getCurrentWord().getWordMean());		
-				txtChinese.setFocusable(true);
+				
+				if(isChineseShowed){
+					txtChinese.setFocusable(false);
+					showNextWord();
+					
+				}else{
+					txtChinese.setText(mainManager.getCurrentWord().getWordMean());		
+					txtChinese.setFocusable(true);
+					isChineseShowed = true;
+				}
+				
 			}
+			if (event.getKeyCode() == KeyEvent.VK_M) {
+			txtChinese.setText(mainManager.getCurrentWord().getWordMean());
+			}
+			
 			 
 		}
 		
+		
+		
+		/**
+		 * 保存单词的文件
+		 */
 		if(event.getKeyCode()==KeyEvent.VK_S && event.isControlDown()){
 			
 			log.debug("Save word!");
@@ -426,6 +474,29 @@ public class MainPanel extends JFrame implements KeyListener, ActionListener {
 			
 		 }
 		
+		
+		/**
+		 * 保存文件
+		 */
+		if(event.getKeyCode()==KeyEvent.VK_S && event.isMetaDown()){
+			try {
+				mainManager.saveAllRecords();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			mainManager.saveAllWords();
+			log.info("保存所有文件");
+		}
+		
+		if (event.getKeyCode() == KeyEvent.VK_RIGHT&& event.isMetaDown()){
+			log.info("强制下一个单词");
+			showNextWord();
+		}
+		
 	}
 	
 	
@@ -433,12 +504,12 @@ public class MainPanel extends JFrame implements KeyListener, ActionListener {
 	public void keyReleased(KeyEvent event) {
 		if(!isInEditMode){
 			if (event.getKeyCode() == KeyEvent.VK_M) {
-				log.debug("Word mastered");
-				mainManager.masterWord();
+				log.debug("Word mastered +1");
+				mainManager.masterWord(0);
 				showNextWord();
 			}
 			if (event.getKeyCode() == KeyEvent.VK_9) {
-				log.debug("Word mastered");
+				log.debug("Word mastered 9");
 				mainManager.masterWord(9);
 				showNextWord();	
 			}

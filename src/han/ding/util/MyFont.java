@@ -1,4 +1,4 @@
-package com.ding.util;
+package han.ding.util;
 
 import java.awt.Font;
 import java.awt.FontFormatException;

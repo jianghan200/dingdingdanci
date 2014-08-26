@@ -1,4 +1,6 @@
-package com.ding.util;
+package han.ding.util;
+
+import han.ding.Config;
 
 import java.awt.DisplayMode;
 import java.awt.GraphicsDevice;
@@ -6,7 +8,6 @@ import java.awt.GraphicsEnvironment;
 
 import javax.swing.JFrame;
 
-import com.ding.Config;
 
 public class ScreenManager {
 	
