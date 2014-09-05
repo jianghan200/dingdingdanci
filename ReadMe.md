@@ -24,15 +24,15 @@ By：`Han Jiang` (`暨林瀚`)
 
 ```
 -src
-	-com.ding
+	-han.ding
 		-RecordManager.java 核心文件
-	-com.ding.dao			数据库
-	-com.ding.filer			文件读取与保存
-	-com.ding.panel			界面
-	-com.ding.pojo			数据模型
-	-com.ding.test
-	-com.ding.util
-	hibernate.cfg.xml		Hibernate配置
+	-han.ding.dao			数据库
+	-han.ding.filer			文件读取与保存
+	-han.ding.filer.texter	读取txt文件
+	-han.ding.panel			界面
+	-han.ding.pojo			数据模型
+	-han.ding.test
+	-han.ding.util
 	log4j.properties		调试记录配置
 	
 -lib
@@ -40,7 +40,6 @@ By：`Han Jiang` (`暨林瀚`)
 	log4j-api-2.0.jar		日志实现库
 	log4j-core-2.0.jar		日志实现库
 	gson-2.24.jar			gson库
-	mysqldriver.jar			数据库驱动
 	
 -res
 	-db——initialize			数据库初始化

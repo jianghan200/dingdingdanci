@@ -37,7 +37,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 
-
+/**
+ * 界面，主要处理界面显示与按键操控逻辑
+ * @author Han
+ *
+ */
 public class MainPanel extends JFrame implements KeyListener, ActionListener {
 	private static Log log = LogFactory.getLog(MainPanel.class);
 
@@ -246,9 +250,9 @@ public class MainPanel extends JFrame implements KeyListener, ActionListener {
 
 		
 		this.addKeyListener(this);
-		lblEnglish.addKeyListener(this);
-		lblPhonetic.addKeyListener(this);
-		txtChinese.addKeyListener(this);
+//		lblEnglish.addKeyListener(this);
+//		lblPhonetic.addKeyListener(this);
+//		txtChinese.addKeyListener(this);
 
 		add(mainPanel);
 	}
@@ -458,7 +462,7 @@ public class MainPanel extends JFrame implements KeyListener, ActionListener {
 		/**
 		 * 保存单词的文件
 		 */
-		if(event.getKeyCode()==KeyEvent.VK_S && event.isControlDown()){
+		if(event.isMetaDown()){
 			
 			log.debug("Save word!");
 			mainManager.saveCurrentWord(txtChinese.getText());

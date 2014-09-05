@@ -1,7 +1,12 @@
 /bin
 /res/record
+/res/word_book_json
 *.rec
 example.log
 example.log*
 #忽略bin目录下所有文件
 res/record/day-1
+
+.settings/.jsdtscope
+
+*.rec

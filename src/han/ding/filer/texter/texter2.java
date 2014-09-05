@@ -16,6 +16,9 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Save all the word
  * 
+ * 文本文件 一行为一个数据
+ * 
+ * 
  * @author Han
  * 
  */

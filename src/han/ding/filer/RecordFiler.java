@@ -31,10 +31,35 @@ public class RecordFiler {
 	private String recordPath;
 
 	public static void main(String[] args) throws IOException {
-		RecordFiler recordFiler = new RecordFiler(Config.DIR_WORD_BOOK_JSON
-				+ "GRE/day-1.rec");
-		recordFiler.addHardship();
-		recordFiler.saveAllRecords(recordFiler.getReciteRecords());
+//		RecordFiler recordFiler = new RecordFiler(Config.DIR_WORD_BOOK_JSON
+//				+ "GRE/day-1.rec");
+//		recordFiler.addHardship();
+//		recordFiler.saveAllRecords(recordFiler.getReciteRecords());
+		
+		
+		ObjectOutputStream outputStream;
+		try {
+			outputStream = new ObjectOutputStream(new FileOutputStream(
+					Config.DIR_WORD_BOOK_JSON
+					+ "test.rec"));
+			
+		
+				outputStream.writeBytes("book");
+				outputStream.writeBytes("book");
+				outputStream.writeBytes("hypo");
+				
+//				outputStream.
+	
+
+			outputStream.close();
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 

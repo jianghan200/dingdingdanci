@@ -75,7 +75,7 @@ public class WordFiler {
 			*/
 			
 			
-			
+			//将数据去重，加入
 	//		WordFiler wordFiler = new WordFiler(Config.wordBookPath);
 	//		WordDAO wordDAO = new WordDAO();
 	//		

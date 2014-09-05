@@ -14,7 +14,7 @@ public class Config {
 //	public static boolean DEBUGMODE = true;
 	
 	// 768 is too large for my laptop
-	public static final String PANEL_TITLE = "Dark Destiny";
+	public static final String PANEL_TITLE = "DingDing Words";
 	public static int PANEL_WIDTH = 1280;
 	public static int PANEL_HEIGHT = 800;
 	public static final boolean IS_FULL_SCREEN = false;
