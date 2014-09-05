@@ -66,6 +66,7 @@ public class MainPanel extends JFrame implements KeyListener, ActionListener {
 	private JMenu fileMenu = new JMenu("文件 (F)");
 	private JMenuItem chooseThItem = new JMenuItem("选择词库 (T)");
 	private JMenuItem statItem = new JMenuItem("词汇统计 (S)");
+	private JMenuItem allWordItem = new JMenuItem("所有词汇(S)");
 	private JMenuItem modeItem = new JMenuItem("复习 (R)");
 	private JMenuItem exitItem = new JMenuItem("退出 (X)");
 	private JMenu helpMenu = new JMenu("帮助 (H)");
@@ -158,6 +159,8 @@ public class MainPanel extends JFrame implements KeyListener, ActionListener {
 		
 		statItem.setMnemonic('S');
 		fileMenu.add(statItem);
+		allWordItem.setMnemonic('A');
+		fileMenu.add(allWordItem);
 		
 		modeItem.setMnemonic('R');
 		fileMenu.add(modeItem);
@@ -172,6 +175,7 @@ public class MainPanel extends JFrame implements KeyListener, ActionListener {
 		helpMenu.add(aboutItem);
 		
 		chooseThItem.addActionListener(this);
+		allWordItem.addActionListener(this);
 		statItem.addActionListener(this);
 		modeItem.addActionListener(this);
 		exitItem.addActionListener(this);
@@ -361,6 +365,9 @@ public class MainPanel extends JFrame implements KeyListener, ActionListener {
 		} 
 		else if (event.getSource() == statItem) {
 			new StatisticPanel(mainManager.getRiciteRecords());
+		}
+		else if (event.getSource() == allWordItem) {
+			new AllWordsPanel(mainManager.allWords);
 		}
 		else if (event.getSource() == modeItem) {
 //			if (mainManager.getReciteMode() == mainManager.Modes.REVIEW) {

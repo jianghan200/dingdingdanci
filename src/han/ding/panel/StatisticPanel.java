@@ -64,7 +64,7 @@ public class StatisticPanel extends JFrame {
 		// 
 		this.setTitle("背诵情况统计");
 		this.setSize(600, 400);
-		this.setResizable(false);
+		this.setResizable(true);
 
 		// 使窗口居中
 		Toolkit kit = Toolkit.getDefaultToolkit(); // 定义工具包
