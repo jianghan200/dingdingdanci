@@ -40,14 +40,13 @@ public class AllWordsPanel extends JFrame {
 		mainPanel.setLayout(new BorderLayout());
 		this.allWords = allWords;
 		
-
 		Object[][] rowData = loadReciteRecords();
 		String[] names = {"单词", "释义", "发音"}; 
 		
 		table = new JTable(rowData, names) {
 			// 将词汇统计表格控件设为只读
 			public boolean isCellEditable(int row, int column) {
-				return false;  
+				return true;  
 			}
 		};
 		
