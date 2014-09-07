@@ -53,6 +53,8 @@ public class RecordManager {
 	String wordBookFilePath;
 
 	public RecordManager(String wordBookFilePath) throws IOException {
+		
+		log.info("**************New book!!");
 
 		this.wordBookFilePath = wordBookFilePath;
 		
@@ -137,10 +139,20 @@ public class RecordManager {
 
 		refreshRecord();
 		
+		/**
+		 * 经常出现没有单词的bug
+		 */
+		if(ebbinghausRecords.size()==0){
+			Word word = new Word();
+			word.setWord("暂时没单词了");
+			currentWord = word;
+			return word;
+		}
 		//ensure the index is in range
 		if (currentWordIndex < ebbinghausRecords.size() - 1) {
 			currentWordIndex++;
 		}
+		
 
 		Record record = ebbinghausRecords.get(currentWordIndex);
 		currentWord = getWordByName(record.word);
@@ -164,8 +176,8 @@ public class RecordManager {
 
 	public void refreshRecord() {
 
-		log.debug("currentWordIndex is " + currentWordIndex);
-		log.debug("ebbinghausRecords.size is " + ebbinghausRecords.size());
+		log.info("currentWordIndex is " + currentWordIndex);
+		log.info("ebbinghausRecords.size is " + ebbinghausRecords.size());
 		
 		if ((System.currentTimeMillis() - currentTime) > (1000 * 60)) {// minutes
 			
