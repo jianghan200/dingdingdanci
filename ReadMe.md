@@ -49,3 +49,6 @@ By：`Han Jiang` (`暨林瀚`)
 	-record	 				存储背诵记录
 	-word_book 				存储原始的单词文件
 ```
+
+V0.3
+读取传统的rec文件， 记录和单词分开 ，每一个json单词本一个记录rec文件
