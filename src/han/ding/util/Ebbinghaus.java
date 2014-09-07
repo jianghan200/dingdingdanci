@@ -1,8 +1,15 @@
 package han.ding.util;
 
+import java.util.logging.Logger;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import han.ding.panel.StatisticPanel;
 import han.ding.pojo.Record;
 
 public class Ebbinghaus {
+	private static Log log = LogFactory.getLog(Ebbinghaus.class);
 	
 	//unit - minutes
 	// 10 stages , 0-9
@@ -23,11 +30,20 @@ public class Ebbinghaus {
 	public boolean needRecite(Record record) {
 		// 记忆曲线完成 
 		if (record.stage >= forgettingCurve.length) {
-			return false;
+
+			log.info("stage is "+ record.stage);
+			return true;
 		}
+		if (record.stage < 0) {
+			
+			log.info("stage is "+ record.stage);
+			return true;
+		}
+		
 		
 		long currentTime = System.currentTimeMillis();
 		int timeDiff = (int)((currentTime - record.lastTime) / (1000 * 60));//minutes
+		
 		
 		if (timeDiff > forgettingCurve[record.stage]) {
 			return true;
